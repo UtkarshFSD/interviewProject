@@ -39,8 +39,14 @@ export default function Home() {
       <h3>Custom Input Field</h3>
       <InputField
         labelStyle={{ fontWeight: "500" }}
-        inputStyle={{ width: "300px", padding: "5px", borderWidth: "1px" }}
-        inputTitle="Input Field"
+        inputStyle={{
+          width: "100%",
+          padding: "10px",
+          borderRadius: "5px",
+          border: "1px solid #ccc",
+          marginBottom: "10px",
+        }}
+        inputTitle="Text Input"
         type="text"
         holder="Your Name"
         customChangeFunction={handleInputChange}
@@ -52,7 +58,13 @@ export default function Home() {
       />
       <InputField
         labelStyle={{ fontWeight: "500" }}
-        inputStyle={{ width: "300px", padding: "5px", borderWidth: "1px" }}
+        inputStyle={{
+          width: "100%",
+          padding: "10px",
+          borderRadius: "5px",
+          border: "1px solid #ccc",
+          marginBottom: "10px",
+        }}
         inputTitle="Select"
         type="select"
         holder="Your Options"
@@ -65,13 +77,11 @@ export default function Home() {
       <InputField
         labelStyle={{ fontWeight: "500" }}
         inputStyle={{
-          width: "300px",
-          padding: "5px",
-          borderWidth: "1px",
           display: "flex",
+          flexDirection: "column",
           gap: "5px",
         }}
-        inputTitle="Radio / CheckBox"
+        inputTitle="Checkbox Options"
         type="checkbox"
         holder="Your Options"
         customChangeFunction={handleCheckboxChange}
@@ -79,7 +89,20 @@ export default function Home() {
         initialValue={checkboxValue}
         scenario="create"
       />
-      <button onClick={handleSubmit}>Submit</button>
+      <button
+        onClick={handleSubmit}
+        style={{
+          padding: "10px 20px",
+          borderRadius: "5px",
+          border: "none",
+          backgroundColor: "#007BFF",
+          color: "white",
+          fontSize: "16px",
+          cursor: "pointer",
+        }}
+      >
+        Submit
+      </button>
     </main>
   );
 }
