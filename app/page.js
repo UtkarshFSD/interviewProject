@@ -6,6 +6,8 @@ import React, { useState } from "react";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState("");
+  const [selectValue, setSelectValue] = useState("");
+  const [checkboxValue, setCheckboxValue] = useState("");
 
   const options = [
     { value: "value1", label: "label1" },
@@ -18,8 +20,18 @@ export default function Home() {
     setInputValue(value);
   };
 
+  const handleSelectChange = (value) => {
+    setSelectValue(value);
+  };
+
+  const handleCheckboxChange = (value) => {
+    setCheckboxValue(value);
+  };
+
   const handleSubmit = () => {
-    console.log("inputValue::::", inputValue);
+    console.log("Text Input Value:", inputValue);
+    console.log("Select Input Value:", selectValue);
+    console.log("Checkbox Input Value:", checkboxValue);
   };
 
   return (
@@ -32,37 +44,40 @@ export default function Home() {
         type="text"
         holder="Your Name"
         customChangeFunction={handleInputChange}
-        value={inputValue}
+        initialValue={inputValue}
         maxLength={50}
         minLength={7}
         required
+        scenario="create"
       />
       <InputField
         labelStyle={{ fontWeight: "500" }}
-        inputStyle={{ width: "300px", padding: "5px", borderWidht: "1px" }}
+        inputStyle={{ width: "300px", padding: "5px", borderWidth: "1px" }}
         inputTitle="Select"
         type="select"
         holder="Your Options"
         options={options}
-        customChangeFunction={handleInputChange}
-        value={inputValue}
+        customChangeFunction={handleSelectChange}
+        initialValue={selectValue}
         required
+        scenario="create"
       />
       <InputField
         labelStyle={{ fontWeight: "500" }}
         inputStyle={{
           width: "300px",
           padding: "5px",
-          borderWidht: "1px",
+          borderWidth: "1px",
           display: "flex",
           gap: "5px",
         }}
         inputTitle="Radio / CheckBox"
         type="checkbox"
         holder="Your Options"
-        customChangeFunction={handleInputChange}
+        customChangeFunction={handleCheckboxChange}
         options={options}
-        value={inputValue}
+        initialValue={checkboxValue}
+        scenario="create"
       />
       <button onClick={handleSubmit}>Submit</button>
     </main>

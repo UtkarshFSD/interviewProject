@@ -1,66 +1,70 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const InputField = ({
   inputStyle,
   inputTitle,
   required,
   disable,
-  customholderChanger,
   customChangeFunction,
   holder,
-  lablelstyle,
+  labelStyle,
   error,
+  errorMessage,
   maxLength,
   minLength,
   options,
   currency,
   regexPattern,
-  labelStyle,
   type = "text",
   validationPattern,
+  scenario,
+  initialValue,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    if (scenario === "edit" || scenario === "disable") {
+      setInputValue(initialValue);
+    }
+  }, [scenario, initialValue]);
 
   const handleChange = (event) => {
     const newValue = event.target.value;
     setInputValue(newValue);
-    console.log("nevalue", newValue);
-    if (validationPattern) {
-      setIsValid(validationPattern.test(newValue));
-    }
-
+    validateInput(newValue);
     if (customChangeFunction) {
-      customChangeFunction("event", event.target.value);
+      customChangeFunction(newValue);
     }
   };
 
   const formatCurrency = (value) => {
+    if (isNaN(value)) return value;
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "$",
+      currency: "USD",
     }).format(value);
   };
 
-  const validateInput = () => {
-    if (required && inputValue.trim() === "") {
-      return false;
-    }
-    if (validationPattern && !validationPattern.test(inputValue)) {
-      return false;
+  const validateInput = (value) => {
+    let isValid = true;
+    let errorMsg = "";
+
+    if (required && value.trim() === "") {
+      isValid = false;
+      errorMsg = "This field is required.";
+    } else if (validationPattern && !validationPattern.test(value)) {
+      isValid = false;
+      errorMsg = "Invalid format.";
+    } else if ((maxLength && maxLength < value.length) || (minLength && minLength > value.length)) {
+      isValid = false;
+      errorMsg = `Input must be between ${minLength} and ${maxLength} characters.`;
     }
 
-
-    if (
-      (maxLength && maxLength < inputValue.length) ||
-      (minLength && minLength > inputValue.length)
-    ) {
-     setIsValid(false)
-    }
-
-    return true;
+    setIsValid(isValid);
+    setErrorMsg(errorMsg);
   };
 
   const renderInput = () => {
@@ -72,6 +76,7 @@ const InputField = ({
             onChange={handleChange}
             disabled={disable}
             required={required}
+            value={inputValue}
           >
             {options.map(({ value, label }) => (
               <option key={value} value={value}>
@@ -92,7 +97,7 @@ const InputField = ({
             required={required}
             maxLength={maxLength}
             minLength={minLength}
-            value={formatCurrency(inputValue)}
+            value={currency ? formatCurrency(inputValue) : inputValue}
           />
         );
 
@@ -101,14 +106,16 @@ const InputField = ({
         return (
           <div>
             {options.map(({ value, label }) => (
-              <label key={value}>
+              <label key={value} style={labelStyle}>
                 <input
                   type={type}
                   value={value}
+                  checked={inputValue === value}
                   onChange={handleChange}
                   disabled={disable}
                   required={required}
                 />
+                {label}
               </label>
             ))}
           </div>
@@ -124,8 +131,10 @@ const InputField = ({
             required={required}
             maxLength={maxLength}
             minLength={minLength}
+            value={inputValue}
           />
         );
+
       default:
         return (
           <input
@@ -137,6 +146,7 @@ const InputField = ({
             required={required}
             maxLength={maxLength}
             minLength={minLength}
+            value={inputValue}
           />
         );
     }
@@ -146,11 +156,7 @@ const InputField = ({
     <div>
       <label style={labelStyle}>{inputTitle}</label>
       {renderInput()}
-      {!isValid && <div> {"Please Put Valid value"}</div>}
-      {/* 
-      UNable to test the validation because of the time apart from i have tried to do all the edge cases
-      
-      {!validateInput() && <div> {"Please Put Valid value"}</div>} */}
+      {!isValid && <div style={{ color: "red" }}>{errorMessage || errorMsg}</div>}
     </div>
   );
 };
