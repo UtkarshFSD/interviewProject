@@ -147,7 +147,10 @@ const InputField = ({
       <label style={labelStyle}>{inputTitle}</label>
       {renderInput()}
       {!isValid && <div> {"Please Put Valid value"}</div>}
-      {!validateInput() && <div> {"Please Put Valid value"}</div>}
+      {/* 
+      UNable to test the validation because of the time apart from i have tried to do all the edge cases
+      
+      {!validateInput() && <div> {"Please Put Valid value"}</div>} */}
     </div>
   );
 };
